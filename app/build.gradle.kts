@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "dev.hossain.timeline"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "dev.hossain.timeline"
