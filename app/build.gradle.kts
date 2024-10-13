@@ -56,6 +56,11 @@ dependencies {
 
     implementation(libs.circuit.codegen.annotations)
     implementation(libs.circuit.foundation)
+    implementation(libs.circuit.overlay)
+    implementation(libs.circuitx.android)
+    implementation(libs.circuitx.effects)
+    implementation(libs.circuitx.gestureNav)
+    implementation(libs.circuitx.overlays)
     ksp(libs.circuit.codegen)
 
     implementation(libs.dagger)

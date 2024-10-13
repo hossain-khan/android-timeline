@@ -2,6 +2,7 @@ package dev.hossain.timeline
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -14,6 +15,8 @@ import com.slack.circuit.foundation.Circuit
 import com.slack.circuit.foundation.CircuitCompositionLocals
 import com.slack.circuit.foundation.NavigableCircuitContent
 import com.slack.circuit.foundation.rememberCircuitNavigator
+import com.slack.circuitx.effects.rememberImpressionNavigator
+import com.slack.circuitx.gesturenavigation.GestureNavigationDecoration
 import com.squareup.anvil.annotations.ContributesMultibinding
 import dev.hossain.timeline.di.ActivityKey
 import dev.hossain.timeline.di.AppScope
@@ -34,12 +37,16 @@ class MainActivity @Inject constructor(private val circuit: Circuit) : Component
                     val backStack = rememberSaveableBackStack(root = InboxScreen)
                     val navigator = rememberCircuitNavigator(backStack) {
                         // Do something when the root screen is popped, usually exiting the app
+                        Log.i("TimelineApp", "Root screen is popped.")
                     }
                     CircuitCompositionLocals(circuit) {
                         NavigableCircuitContent(
                             navigator = navigator,
                             backStack = backStack,
-                            Modifier.padding(padding)
+                            Modifier.padding(padding),
+                            decoration = GestureNavigationDecoration {
+                                navigator.pop()
+                            }
                         )
                     }
                 }
