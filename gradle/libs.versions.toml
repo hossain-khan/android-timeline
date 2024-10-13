@@ -12,7 +12,10 @@ composeBom = "2024.09.03"
 # https://github.com/slackhq/circuit/releases
 circuit = "0.24.0"
 ksp = "2.0.20-1.0.25"
+
+# https://github.com/square/anvil
 anvil = "0.3.2"
+anvilAnnotations = "2.4.9"
 
 # https://dagger.dev/dev-guide/ksp
 dagger = "2.52"
@@ -38,9 +41,16 @@ circuit-foundation = { group = "com.slack.circuit", name = "circuit-foundation",
 circuit-overlay = { group = "com.slack.circuit", name = "circuit-overlay", version.ref = "circuit" }
 circuitx-overlays = { group = "com.slack.circuit", name = "circuitx-overlays", version.ref = "circuit" }
 circuitx-gestureNav = { group = "com.slack.circuit", name = "circuitx-gesture-navigation", version.ref = "circuit" }
+circuit-codegen-annotations = { group = "com.slack.circuit", name = "circuit-codegen-annotations", version.ref = "circuit" }
+circuit-codegen = { group = "com.slack.circuit", name = "circuit-codegen", version.ref = "circuit" }
 
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
 dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
+
+# https://mvnrepository.com/artifact/com.squareup.anvil/annotations-optional
+anvil-annotations-optional = { group = "com.squareup.anvil", name = "annotations-optional", version.ref = "anvilAnnotations"}
+
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

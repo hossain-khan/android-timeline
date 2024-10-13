@@ -37,9 +37,15 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.CircuitContext
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.Navigator
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import dev.hossain.timeline.di.AppScope
+import javax.inject.Inject
 
 @Parcelize
 data object InboxScreen : Screen {
@@ -120,7 +126,12 @@ data class Email(
 )
 
 
-class InboxPresenter(private val navigator: Navigator, private val emailRepository: EmailRepository) : Presenter<InboxScreen.State> {
+class InboxPresenter @AssistedInject constructor(
+    @Assisted private val screen: InboxScreen,
+    @Assisted private val navigator: Navigator,
+    @Assisted private val context: CircuitContext,
+    private val emailRepository: EmailRepository
+) : Presenter<InboxScreen.State> {
     @Composable
     override fun present(): InboxScreen.State {
         val emails by produceState<List<Email>>(initialValue = emptyList()) {
@@ -136,13 +147,10 @@ class InboxPresenter(private val navigator: Navigator, private val emailReposito
         }
     }
 
-    class Factory(private val emailRepository: EmailRepository) : Presenter.Factory {
-        override fun create(screen: Screen, navigator: Navigator, context: CircuitContext): Presenter<*>? {
-            return when (screen) {
-                InboxScreen -> return InboxPresenter(navigator, emailRepository)
-                else -> null
-            }
-        }
+    @CircuitInject(InboxScreen::class, AppScope::class)
+    @AssistedFactory
+    fun interface Factory {
+        fun create(screen: InboxScreen, navigator: Navigator, context: CircuitContext): InboxPresenter
     }
 }
 
