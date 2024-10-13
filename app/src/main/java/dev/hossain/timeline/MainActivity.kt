@@ -11,9 +11,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.slack.circuit.backstack.rememberSaveableBackStack
 import com.slack.circuit.foundation.Circuit
 import com.slack.circuit.foundation.CircuitCompositionLocals
 import com.slack.circuit.foundation.CircuitContent
+import com.slack.circuit.foundation.NavigableCircuitContent
+import com.slack.circuit.foundation.rememberCircuitNavigator
 import dev.hossain.timeline.ui.theme.TimelineTheme
 
 class MainActivity : ComponentActivity() {
@@ -23,15 +26,26 @@ class MainActivity : ComponentActivity() {
         val emailRepository = EmailRepository()
         val circuit: Circuit =
             Circuit.Builder()
-                .addPresenter<InboxScreen, InboxScreen.State>(InboxPresenter(emailRepository))
+                // TODO Update circuit tutorial code here
+                //.addPresenter<InboxScreen, InboxScreen.State>(InboxPresenter(emailRepository))
+                .addPresenterFactory(InboxPresenter.Factory(emailRepository))
                 .addUi<InboxScreen, InboxScreen.State> { state, modifier -> Inbox(state, modifier) }
+                .addPresenterFactory(DetailPresenter.Factory(emailRepository))
+                // TODO Update circuit tutorial code here first param should be the state
+                .addUi<DetailScreen, DetailScreen.State> { state, modifier -> EmailDetailContent(state, modifier) }
                 .build()
+
+
 
         setContent {
             TimelineTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { padding ->
+                    val backStack = rememberSaveableBackStack(root = InboxScreen)
+                    val navigator = rememberCircuitNavigator(backStack) {
+                        // Do something when the root screen is popped, usually exiting the app
+                    }
                     CircuitCompositionLocals(circuit) {
-                        CircuitContent(InboxScreen, Modifier.padding(padding))
+                        NavigableCircuitContent(navigator = navigator, backStack = backStack,  Modifier.padding(padding))
                     }
                 }
             }
