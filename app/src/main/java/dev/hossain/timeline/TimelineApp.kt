@@ -8,7 +8,7 @@ import dev.hossain.timeline.di.AppComponent
  */
 class TimelineApp : Application() {
 
-//  private val appComponent: AppComponent by lazy { AppComponent.create(this) }
-//
-//  fun appComponent(): AppComponent = appComponent
+  private val appComponent: AppComponent by lazy { AppComponent.create(this) }
+
+  fun appComponent(): AppComponent = appComponent
 }

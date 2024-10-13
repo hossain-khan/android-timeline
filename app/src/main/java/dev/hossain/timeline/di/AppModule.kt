@@ -6,7 +6,7 @@ import dev.hossain.timeline.EmailRepository
 
 @ContributesTo(AppScope::class)
 @dagger.Module
-interface AppModule {
+class AppModule {
     @Provides
     fun provideEmailRepository(): EmailRepository {
         return EmailRepository()
