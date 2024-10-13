@@ -127,9 +127,7 @@ data class Email(
 
 
 class InboxPresenter @AssistedInject constructor(
-    @Assisted private val screen: InboxScreen,
     @Assisted private val navigator: Navigator,
-    @Assisted private val context: CircuitContext,
     private val emailRepository: EmailRepository
 ) : Presenter<InboxScreen.State> {
     @Composable
@@ -150,7 +148,7 @@ class InboxPresenter @AssistedInject constructor(
     @CircuitInject(InboxScreen::class, AppScope::class)
     @AssistedFactory
     fun interface Factory {
-        fun create(screen: InboxScreen, navigator: Navigator, context: CircuitContext): InboxPresenter
+        fun create(navigator: Navigator): InboxPresenter
     }
 }
 

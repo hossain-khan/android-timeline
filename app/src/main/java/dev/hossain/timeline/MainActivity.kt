@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -26,7 +27,7 @@ import javax.inject.Inject
 
 @ContributesMultibinding(AppScope::class, boundType = Activity::class)
 @ActivityKey(MainActivity::class)
-class MainActivity @Inject constructor(private val circuit: Circuit) : ComponentActivity() {
+class MainActivity @Inject constructor(private val circuit: Circuit) : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

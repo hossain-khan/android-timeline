@@ -5,6 +5,7 @@ coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
+androidx-appcompat = "1.7.0"
 lifecycleRuntimeKtx = "2.8.6"
 activityCompose = "1.9.2"
 composeBom = "2024.09.03"
@@ -13,9 +14,9 @@ composeBom = "2024.09.03"
 circuit = "0.24.0"
 ksp = "2.0.20-1.0.25"
 
-# https://github.com/square/anvil
+# Forked Anvil
+# https://github.com/ZacSweers/anvil
 anvil = "0.3.2"
-anvilAnnotations = "2.4.9"
 
 # https://dagger.dev/dev-guide/ksp
 dagger = "2.52"
@@ -35,7 +36,9 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
-# Add circuit
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
+
+# Circuit - ⚡️A Compose-driven architecture for Kotlin and Android applications.
 # https://github.com/slackhq/circuit/releases
 circuit-foundation = { group = "com.slack.circuit", name = "circuit-foundation", version.ref = "circuit" }
 circuit-overlay = { group = "com.slack.circuit", name = "circuit-overlay", version.ref = "circuit" }
@@ -48,7 +51,9 @@ dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = 
 dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 
 # https://mvnrepository.com/artifact/com.squareup.anvil/annotations-optional
-anvil-annotations-optional = { group = "com.squareup.anvil", name = "annotations-optional", version.ref = "anvilAnnotations"}
+# https://github.com/ZacSweers/anvil/blob/main/FORK.md
+anvil-annotations = { group = "dev.zacsweers.anvil", name = "annotations", version.ref = "anvil"}
+anvil-annotations-optional = { group = "dev.zacsweers.anvil", name = "annotations-optional", version.ref = "anvil"}
 
 
 
@@ -56,11 +61,15 @@ anvil-annotations-optional = { group = "com.squareup.anvil", name = "annotations
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+#kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+#kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 
 # Add @Parcelize support
 # https://plugins.gradle.org/plugin/org.jetbrains.kotlin.plugin.parcelize
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
+
+# https://github.com/ZacSweers/anvil/blob/main/FORK.md
 anvil = { id = "dev.zacsweers.anvil", version.ref = "anvil" }
 

@@ -46,6 +46,7 @@ dependencies {
     // App dependencies
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.material3)
@@ -60,6 +61,7 @@ dependencies {
     implementation(libs.dagger)
     ksp(libs.dagger.compiler)
 
+    implementation(libs.anvil.annotations)
     implementation(libs.anvil.annotations.optional)
 
     // Testing
@@ -70,4 +72,11 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+}
+
+ksp {
+    // Anvil-KSP
+    arg("anvil-ksp-extraContributingAnnotations", "com.slack.circuit.codegen.annotations.CircuitInject")
+    // kotlin-inject-anvil (requires 0.0.3+)
+    arg("kotlin-inject-anvil-contributing-annotations", "com.slack.circuit.codegen.annotations.CircuitInject")
 }
