@@ -59,6 +59,7 @@ data object InboxScreen : Screen {
     }
 }
 
+@CircuitInject(screen = InboxScreen::class, scope = AppScope::class)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Inbox(state: InboxScreen.State, modifier: Modifier = Modifier) {
@@ -184,9 +185,9 @@ data class DetailScreen(val emailId: String) : Screen {
     }
 }
 
-class DetailPresenter(
-    private val screen: DetailScreen,
-    private val navigator: Navigator,
+class DetailPresenter @AssistedInject constructor(
+    @Assisted private val navigator: Navigator,
+    @Assisted private val screen: DetailScreen,
     private val emailRepository: EmailRepository
 ) : Presenter<DetailScreen.State> {
     @Composable
@@ -199,16 +200,14 @@ class DetailPresenter(
         }
     }
 
-    class Factory(private val emailRepository: EmailRepository) : Presenter.Factory {
-        override fun create(screen: Screen, navigator: Navigator, context: CircuitContext): Presenter<*>? {
-            return when (screen) {
-                is DetailScreen -> return DetailPresenter(screen, navigator, emailRepository)
-                else -> null
-            }
-        }
+    @CircuitInject(DetailScreen::class, AppScope::class)
+    @AssistedFactory
+    fun interface Factory {
+        fun create(navigator: Navigator, screen: DetailScreen): DetailPresenter
     }
 }
 
+@CircuitInject(DetailScreen::class, AppScope::class)
 @Composable
 fun EmailDetailContent(state: DetailScreen.State, modifier: Modifier = Modifier) {
     val email = state.email
