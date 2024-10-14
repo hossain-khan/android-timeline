@@ -30,17 +30,3 @@ interface CircuitModule {
     }
   }
 }
-
-/*
-        val emailRepository = EmailRepository()
-        val circuit: Circuit =
-            Circuit.Builder()
-                // TODO Update circuit tutorial code here
-                //.addPresenter<InboxScreen, InboxScreen.State>(InboxPresenter(emailRepository))
-                //.addPresenterFactory(InboxPresenter.Factory(emailRepository))
-                .addUi<InboxScreen, InboxScreen.State> { state, modifier -> Inbox(state, modifier) }
-                .addPresenterFactory(DetailPresenter.Factory(emailRepository))
-                // TODO Update circuit tutorial code here first param should be the state
-                .addUi<DetailScreen, DetailScreen.State> { state, modifier -> EmailDetailContent(state, modifier) }
-                .build()
- */
