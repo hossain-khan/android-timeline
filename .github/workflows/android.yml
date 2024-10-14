@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        java-version: [ '22' ]
+        java-version: [ '22', '23' ]
         distribution: [ 'temurin' ]
 
     steps:
