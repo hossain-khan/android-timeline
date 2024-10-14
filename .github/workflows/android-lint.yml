@@ -1,4 +1,4 @@
-name: Android CI Post Merge Check
+name: Post Merge Check
 # Run extra build and checks to ensure `main` is functioning right.
 
 on:
@@ -19,22 +19,13 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      # Automatic gradle caching using `actions/cache@v4`
+      # https://github.com/gradle/actions/tree/main/setup-gradle
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Run Linter
         run: ./gradlew lint
 
       - name: Build with Gradle
         run: ./gradlew build
-
-      # https://github.com/marketplace/actions/cache
-      - name: Cache Gradle Dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
