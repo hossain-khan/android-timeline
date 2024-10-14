@@ -1,40 +1,32 @@
-name: Android CI
+name: Android CI Post Merge Check
+# Run extra build and checks to ensure `main` is functioning right.
 
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
-  android-build:
-    runs-on: ubuntu-latest
+  android-post-check:
 
-    strategy:
-      matrix:
-        java-version: [ '22', '23' ]
-        distribution: [ 'temurin' ]
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
       - name: set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: ${{ matrix.java-version }}
-          distribution: ${{ matrix.distribution }}
+          java-version: '22'
+          distribution: 'temurin'
           cache: gradle
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Run Linter
-        run: ./gradlew lintKotlin
-
-      - name: Run test
-        run: ./gradlew testDebugUnitTest
+        run: ./gradlew lint
 
       - name: Build with Gradle
-        run: ./gradlew assembleDebug
+        run: ./gradlew build
 
       # https://github.com/marketplace/actions/cache
       - name: Cache Gradle Dependencies
