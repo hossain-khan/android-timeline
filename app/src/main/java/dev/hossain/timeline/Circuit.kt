@@ -37,9 +37,15 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.CircuitContext
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.Navigator
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import dev.hossain.timeline.di.AppScope
+import javax.inject.Inject
 
 @Parcelize
 data object InboxScreen : Screen {
@@ -53,6 +59,7 @@ data object InboxScreen : Screen {
     }
 }
 
+@CircuitInject(screen = InboxScreen::class, scope = AppScope::class)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Inbox(state: InboxScreen.State, modifier: Modifier = Modifier) {
@@ -120,7 +127,10 @@ data class Email(
 )
 
 
-class InboxPresenter(private val navigator: Navigator, private val emailRepository: EmailRepository) : Presenter<InboxScreen.State> {
+class InboxPresenter @AssistedInject constructor(
+    @Assisted private val navigator: Navigator,
+    private val emailRepository: EmailRepository
+) : Presenter<InboxScreen.State> {
     @Composable
     override fun present(): InboxScreen.State {
         val emails by produceState<List<Email>>(initialValue = emptyList()) {
@@ -136,13 +146,10 @@ class InboxPresenter(private val navigator: Navigator, private val emailReposito
         }
     }
 
-    class Factory(private val emailRepository: EmailRepository) : Presenter.Factory {
-        override fun create(screen: Screen, navigator: Navigator, context: CircuitContext): Presenter<*>? {
-            return when (screen) {
-                InboxScreen -> return InboxPresenter(navigator, emailRepository)
-                else -> null
-            }
-        }
+    @CircuitInject(InboxScreen::class, AppScope::class)
+    @AssistedFactory
+    fun interface Factory {
+        fun create(navigator: Navigator): InboxPresenter
     }
 }
 
@@ -178,9 +185,9 @@ data class DetailScreen(val emailId: String) : Screen {
     }
 }
 
-class DetailPresenter(
-    private val screen: DetailScreen,
-    private val navigator: Navigator,
+class DetailPresenter @AssistedInject constructor(
+    @Assisted private val navigator: Navigator,
+    @Assisted private val screen: DetailScreen,
     private val emailRepository: EmailRepository
 ) : Presenter<DetailScreen.State> {
     @Composable
@@ -193,16 +200,14 @@ class DetailPresenter(
         }
     }
 
-    class Factory(private val emailRepository: EmailRepository) : Presenter.Factory {
-        override fun create(screen: Screen, navigator: Navigator, context: CircuitContext): Presenter<*>? {
-            return when (screen) {
-                is DetailScreen -> return DetailPresenter(screen, navigator, emailRepository)
-                else -> null
-            }
-        }
+    @CircuitInject(DetailScreen::class, AppScope::class)
+    @AssistedFactory
+    fun interface Factory {
+        fun create(navigator: Navigator, screen: DetailScreen): DetailPresenter
     }
 }
 
+@CircuitInject(DetailScreen::class, AppScope::class)
 @Composable
 fun EmailDetailContent(state: DetailScreen.State, modifier: Modifier = Modifier) {
     val email = state.email

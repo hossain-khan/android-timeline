@@ -2,19 +2,20 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    //alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.anvil)
 }
-
-apply(plugin = "kotlin-parcelize")
 
 android {
     namespace = "dev.hossain.timeline"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "dev.hossain.timeline"
         minSdk = 30
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -43,16 +44,34 @@ android {
 }
 
 dependencies {
-
+    // App dependencies
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.material3)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-    implementation(libs.circuit)
+
+    implementation(libs.circuit.codegen.annotations)
+    implementation(libs.circuit.foundation)
+    implementation(libs.circuit.overlay)
+    implementation(libs.circuitx.android)
+    implementation(libs.circuitx.effects)
+    implementation(libs.circuitx.gestureNav)
+    implementation(libs.circuitx.overlays)
+    ksp(libs.circuit.codegen)
+
+    implementation(libs.dagger)
+    //ksp(libs.dagger.compiler) // Not working for some reason. Kapt worked.
+    kapt(libs.dagger.compiler)
+
+
+    implementation(libs.anvil.annotations)
+    implementation(libs.anvil.annotations.optional)
+
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -60,4 +79,11 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+}
+
+ksp {
+    // Anvil-KSP
+    arg("anvil-ksp-extraContributingAnnotations", "com.slack.circuit.codegen.annotations.CircuitInject")
+    // kotlin-inject-anvil (requires 0.0.3+)
+    arg("kotlin-inject-anvil-contributing-annotations", "com.slack.circuit.codegen.annotations.CircuitInject")
 }
