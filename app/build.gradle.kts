@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.anvil)
+    alias(libs.plugins.kotlinter)
 }
 
 android {
@@ -27,7 +28,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -64,9 +65,8 @@ dependencies {
     ksp(libs.circuit.codegen)
 
     implementation(libs.dagger)
-    //ksp(libs.dagger.compiler) // Not working for some reason. Kapt worked.
+    // ksp(libs.dagger.compiler) // Not working for some reason. Kapt worked.
     kapt(libs.dagger.compiler)
-
 
     implementation(libs.anvil.annotations)
     implementation(libs.anvil.annotations.optional)
