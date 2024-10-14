@@ -15,7 +15,9 @@ android {
 
     defaultConfig {
         applicationId = "dev.hossain.timeline"
+        // Android 11 (API level 30) https://developer.android.com/tools/releases/platforms#11
         minSdk = 30
+        // Android 15 (API level 35) https://developer.android.com/tools/releases/platforms#15
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -52,6 +54,7 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui)

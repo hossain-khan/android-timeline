@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.Timeline" parent="android:Theme.Material.NoActionBar" />
 
-    <style name="Theme.Timeline" parent="android:Theme.Material.Light.NoActionBar" />
+    <!--
+        App Splash Screen
+        https://developer.android.com/develop/ui/views/launch/splash-screen
+    -->
+    <style name="Theme.Timeline.Splash" parent="Theme.SplashScreen">
+        <!-- Customize splash screen attributes -->
+        <item name="postSplashScreenTheme">@style/Theme.Timeline</item>
+    </style>
 </resources>
