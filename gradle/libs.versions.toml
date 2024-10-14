@@ -11,7 +11,7 @@ composeBom = "2024.09.03"
 
 # https://github.com/slackhq/circuit/releases
 circuit = "0.24.0"
-ksp = "2.0.20-1.0.25"
+ksp = "2.0.21-1.0.25"
 
 # Forked Anvil
 # https://github.com/ZacSweers/anvil
