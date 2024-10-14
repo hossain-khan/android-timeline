@@ -7,8 +7,7 @@ import dev.hossain.timeline.di.AppComponent
  * Application class for the app with key initializations.
  */
 class TimelineApp : Application() {
+    private val appComponent: AppComponent by lazy { AppComponent.create(this) }
 
-  private val appComponent: AppComponent by lazy { AppComponent.create(this) }
-
-  fun appComponent(): AppComponent = appComponent
+    fun appComponent(): AppComponent = appComponent
 }

@@ -8,7 +8,5 @@ import dev.hossain.timeline.EmailRepository
 @dagger.Module
 class AppModule {
     @Provides
-    fun provideEmailRepository(): EmailRepository {
-        return EmailRepository()
-    }
+    fun provideEmailRepository(): EmailRepository = EmailRepository()
 }
