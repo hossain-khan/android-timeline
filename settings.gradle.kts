@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "timeline"
+rootProject.name = "Timeline 📍"
 include(":app")
