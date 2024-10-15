@@ -29,6 +29,9 @@ googleFonts = "1.7.3"
 # https://developer.android.com/develop/ui/views/launch/splash-screen
 splash = "1.0.1"
 
+# https://github.com/JakeWharton/timber
+timber = "5.0.1"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -69,6 +72,9 @@ anvil-annotations-optional = { group = "dev.zacsweers.anvil", name = "annotation
 
 # https://mvnrepository.com/artifact/androidx.compose.ui/ui-text-google-fonts
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "googleFonts" }
+
+# https://github.com/JakeWharton/timber
+timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber"}
 
 
 

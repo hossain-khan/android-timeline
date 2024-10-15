@@ -46,6 +46,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -78,6 +79,8 @@ dependencies {
     implementation(libs.anvil.annotations)
     implementation(libs.anvil.annotations.optional)
 
+    implementation(libs.timber)
+
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -89,6 +92,7 @@ dependencies {
 }
 
 ksp {
+    // `@CircuitInject` - https://slackhq.github.io/circuit/code-gen/#code-generation
     // Anvil-KSP
     arg("anvil-ksp-extraContributingAnnotations", "com.slack.circuit.codegen.annotations.CircuitInject")
     // kotlin-inject-anvil (requires 0.0.3+)
