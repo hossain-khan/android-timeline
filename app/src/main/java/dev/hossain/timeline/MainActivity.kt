@@ -20,6 +20,7 @@ import com.slack.circuitx.gesturenavigation.GestureNavigationDecoration
 import com.squareup.anvil.annotations.ContributesMultibinding
 import dev.hossain.timeline.di.ActivityKey
 import dev.hossain.timeline.di.AppScope
+import dev.hossain.timeline.screens.WelcomeScreen
 import dev.hossain.timeline.ui.theme.TimelineTheme
 import javax.inject.Inject
 
@@ -32,13 +33,13 @@ class MainActivity
     ) : ComponentActivity() {
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
-            val splashScreen = installSplashScreen()
+            installSplashScreen()
             enableEdgeToEdge()
 
             setContent {
                 TimelineTheme {
                     Scaffold(modifier = Modifier.fillMaxSize()) { padding ->
-                        val backStack = rememberSaveableBackStack(root = InboxScreen)
+                        val backStack = rememberSaveableBackStack(root = WelcomeScreen)
                         val navigator =
                             rememberCircuitNavigator(backStack) {
                                 // Do something when the root screen is popped, usually exiting the app
