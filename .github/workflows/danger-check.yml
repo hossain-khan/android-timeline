@@ -1,0 +1,24 @@
+# danger-kotlin
+# https://github.com/marketplace/actions/danger-kotlin
+name: "Run Danger"
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  danger-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Danger
+        uses: danger/kotlin@1.3.1
+        env:
+          # https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
