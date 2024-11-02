@@ -6,9 +6,12 @@ on:
   pull_request:
     branches:
       - main
-  push:
-    branches:
-      - main
+# Disabled danger on `main` because of following error after mering to `main`
+# kotlinx.serialization.MissingFieldException: Fields [issue, pr, commits, reviews, requested_reviewers] are required 
+# for type with serial name 'systems.danger.kotlin.models.github.GitHub', but they were missing
+  # push:
+  #   branches:
+  #     - main
 
 jobs:
   danger-check:
