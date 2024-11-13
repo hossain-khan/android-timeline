@@ -81,6 +81,12 @@ dependencies {
 
     implementation(libs.timber)
 
+    implementation(libs.okio)
+    implementation(libs.moshi)
+    implementation(libs.moshi.kotlin)
+
+    implementation(files("libs/device-timeline-lib-v1.2.jar"))
+
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

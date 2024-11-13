@@ -1,8 +1,10 @@
 package dev.hossain.timeline.screens
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -20,9 +22,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.CircuitUiEvent
@@ -33,9 +37,12 @@ import com.slack.circuit.runtime.screen.Screen
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import dev.hossain.timeline.Parser
 import dev.hossain.timeline.di.AppScope
+import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import timber.log.Timber
+import java.io.InputStream
 
 @Parcelize
 data object TimelineDataScreen : Screen {
@@ -56,19 +63,46 @@ class TimelineDataPresenter
         @Assisted private val navigator: Navigator,
     ) : Presenter<TimelineDataScreen.State> {
         @Composable
-        override fun present(): TimelineDataScreen.State =
-            TimelineDataScreen.State { event ->
+        override fun present(): TimelineDataScreen.State {
+            val scope = rememberCoroutineScope()
+            val context: Context = LocalContext.current
+
+            return TimelineDataScreen.State { event ->
                 when (event) {
                     is TimelineDataScreen.Event.FileSelected -> {
                         Timber.i("User selected file: %s", event.fileUri)
+                        scope.launch {
+                            loadFileData(context, event.fileUri)
+                        }
                     }
                 }
             }
+        }
 
         @CircuitInject(TimelineDataScreen::class, AppScope::class)
         @AssistedFactory
         fun interface Factory {
             fun create(navigator: Navigator): TimelineDataPresenter
+        }
+
+        private suspend fun loadFileData(
+            context: Context,
+            fileUri: Uri,
+        ) {
+            val parser = Parser()
+
+            val contentResolver = context.contentResolver
+
+            contentResolver.openInputStream(fileUri)?.use { inputStream: InputStream ->
+                val timelineData = parser.parse(inputStream)
+                Timber.d("Parsed timeline data: $timelineData")
+                Toast
+                    .makeText(
+                        context,
+                        "Parsed timeline data successfully. Got ${timelineData.rawSignals.size} raw signals and ${timelineData.semanticSegments} semantic segments.",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+            } ?: Timber.e("Failed to open input stream for URI: $fileUri")
         }
     }
 
