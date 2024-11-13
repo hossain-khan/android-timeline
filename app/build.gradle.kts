@@ -81,6 +81,8 @@ dependencies {
 
     implementation(libs.timber)
 
+    implementation(files("libs/device-timeline-lib-v1.1.jar"))
+
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

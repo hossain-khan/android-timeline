@@ -22,6 +22,7 @@ import dev.hossain.timeline.di.ActivityKey
 import dev.hossain.timeline.di.AppScope
 import dev.hossain.timeline.screens.WelcomeScreen
 import dev.hossain.timeline.ui.theme.TimelineTheme
+import timber.log.Timber
 import javax.inject.Inject
 
 @ContributesMultibinding(AppScope::class, boundType = Activity::class)
@@ -43,7 +44,7 @@ class MainActivity
                         val navigator =
                             rememberCircuitNavigator(backStack) {
                                 // Do something when the root screen is popped, usually exiting the app
-                                Log.i("TimelineApp", "Root screen is popped.")
+                                Timber.tag("TimelineApp").i("Root screen is popped.")
                             }
                         CircuitCompositionLocals(circuit) {
                             NavigableCircuitContent(
