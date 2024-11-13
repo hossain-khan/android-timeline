@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -84,16 +85,25 @@ class TimelineDataPresenter
             fun create(navigator: Navigator): TimelineDataPresenter
         }
 
-    private suspend fun loadFileData(context: Context, fileUri: Uri) {
-        val parser = Parser()
+        private suspend fun loadFileData(
+            context: Context,
+            fileUri: Uri,
+        ) {
+            val parser = Parser()
 
-        val contentResolver = context.contentResolver
+            val contentResolver = context.contentResolver
 
-        contentResolver.openInputStream(fileUri)?.use { inputStream: InputStream ->
-            val timelineData = parser.parse(inputStream)
-            Timber.d("Parsed timeline data: $timelineData")
-        } ?: Timber.e("Failed to open input stream for URI: $fileUri")
-    }
+            contentResolver.openInputStream(fileUri)?.use { inputStream: InputStream ->
+                val timelineData = parser.parse(inputStream)
+                Timber.d("Parsed timeline data: $timelineData")
+                Toast
+                    .makeText(
+                        context,
+                        "Parsed timeline data successfully. Got ${timelineData.rawSignals.size} raw signals and ${timelineData.semanticSegments} semantic segments.",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+            } ?: Timber.e("Failed to open input stream for URI: $fileUri")
+        }
     }
 
 @CircuitInject(TimelineDataScreen::class, AppScope::class)
@@ -125,9 +135,9 @@ fun FileSelectionScreen(
     ) { innerPadding ->
         Column(
             modifier =
-            modifier
-                .fillMaxSize()
-                .padding(innerPadding),
+                modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
