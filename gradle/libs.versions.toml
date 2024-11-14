@@ -81,11 +81,6 @@ androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text
 # https://github.com/JakeWharton/timber
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber"}
 
-okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
-
-moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
-moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
-
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
