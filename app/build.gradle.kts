@@ -85,7 +85,7 @@ dependencies {
     implementation(libs.moshi)
     implementation(libs.moshi.kotlin)
 
-    implementation(files("libs/device-timeline-lib-v1.2.jar"))
+    implementation(files("libs/device-timeline-lib-v1.3.jar"))
 
     // Testing
     testImplementation(libs.junit)
