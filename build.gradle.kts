@@ -8,4 +8,5 @@ plugins {
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.anvil) apply false
     alias(libs.plugins.kotlinter) apply false
+    alias(libs.plugins.build.secrets) apply false
 }
