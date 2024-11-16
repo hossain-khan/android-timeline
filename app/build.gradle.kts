@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.anvil)
     alias(libs.plugins.kotlinter)
+    alias(libs.plugins.build.secrets)
 }
 
 android {
@@ -50,6 +51,18 @@ android {
     }
 }
 
+// https://developers.google.com/maps/documentation/android-sdk/secrets-gradle-plugin
+secrets {
+    // A properties file containing secret values.
+    propertiesFileName = "secrets.properties"
+
+    // A properties file containing default secret values.
+    defaultPropertiesFileName = "local.defaults.properties"
+
+    // Configure which keys should be ignored
+    ignoreList.add("sdk.*") // Ignore all keys matching the regexp "sdk.*"
+}
+
 dependencies {
     // App dependencies
     implementation(platform(libs.androidx.compose.bom))
@@ -84,6 +97,10 @@ dependencies {
     implementation(libs.okio)
     implementation(libs.moshi)
     implementation(libs.moshi.kotlin)
+
+    implementation(libs.google.maps.compose)
+    implementation(libs.google.maps.compose.utils)
+    implementation(libs.google.maps.compose.widgets)
 
     implementation(files("libs/device-timeline-lib-v1.3.jar"))
 

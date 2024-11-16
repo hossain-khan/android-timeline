@@ -37,7 +37,13 @@ okio = "3.9.1"
 
 moshi = "1.15.1"
 
+# https://developers.google.com/maps/documentation/android-sdk/maps-compose
+# https://github.com/googlemaps/android-maps-compose
+googleMapsCompose = "6.2.1"
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 [libraries]
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -86,7 +92,14 @@ okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
 moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
 moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
 
+# https://github.com/googlemaps/android-maps-compose?tab=readme-ov-file#installation
+google-maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "googleMapsCompose" }
+google-maps-compose-utils = { group = "com.google.maps.android", name = "maps-compose-utils", version.ref = "googleMapsCompose" }
+google-maps-compose-widgets = { group = "com.google.maps.android", name = "maps-compose-widgets", version.ref = "googleMapsCompose" }
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 [plugins]
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
@@ -105,3 +118,5 @@ anvil = { id = "dev.zacsweers.anvil", version.ref = "anvil" }
 # https://github.com/jeremymailen/kotlinter-gradle
 kotlinter = { id = "org.jmailen.kotlinter", version.ref = "kotlinter" }
 
+# https://developers.google.com/maps/documentation/android-sdk/secrets-gradle-plugin
+build-secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version = "2.0.1" }
