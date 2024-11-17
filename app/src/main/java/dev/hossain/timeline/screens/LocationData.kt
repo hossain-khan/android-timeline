@@ -30,8 +30,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapsComposeExperimentalApi
+import com.google.maps.android.compose.MarkerInfoWindow
+import com.google.maps.android.compose.clustering.Clustering
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.rememberMarkerState
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
@@ -48,9 +53,12 @@ import kotlinx.parcelize.Parcelize
 import timber.log.Timber
 import java.io.InputStream
 
+val northAmerica = LatLng(43.2606921, -80.0979546)
+
 @Parcelize
 data object TimelineDataScreen : Screen {
     data class State(
+        val items: List<TimelineClusterItem>,
         val eventSink: (Event) -> Unit,
     ) : CircuitUiState
 
@@ -68,15 +76,16 @@ class TimelineDataPresenter
     ) : Presenter<TimelineDataScreen.State> {
         @Composable
         override fun present(): TimelineDataScreen.State {
+            var items = remember { mutableStateOf(emptyList<TimelineClusterItem>()) }
             val scope = rememberCoroutineScope()
             val context: Context = LocalContext.current
 
-            return TimelineDataScreen.State { event ->
+            return TimelineDataScreen.State(items.value) { event ->
                 when (event) {
                     is TimelineDataScreen.Event.FileSelected -> {
                         Timber.i("User selected file: %s", event.fileUri)
                         scope.launch {
-                            loadFileData(context, event.fileUri)
+                            //items = loadFileData(context, event.fileUri)
                         }
                     }
                 }
@@ -92,7 +101,7 @@ class TimelineDataPresenter
         private suspend fun loadFileData(
             context: Context,
             fileUri: Uri,
-        ) {
+        ): List<TimelineClusterItem> {
             val parser = Parser()
 
             val contentResolver = context.contentResolver
@@ -106,7 +115,28 @@ class TimelineDataPresenter
                         "Parsed timeline data successfully. Got ${timelineData.rawSignals.size} raw signals and ${timelineData.semanticSegments} semantic segments.",
                         Toast.LENGTH_SHORT,
                     ).show()
+
+                val latLngList: List<LatLng> = timelineData.rawSignals.mapNotNull {
+                    it.position?.latLng?.let { latLngString ->
+                        val latLng = latLngString.split(", ")
+                        LatLng(
+                            /* latitude = */ latLng[0].removeSuffix("°").toDouble(),
+                            /* longitude = */ latLng[1].removeSuffix("°").toDouble()
+                        )
+                    }
+                }
+
+                return latLngList.mapIndexed { index, latLng ->
+                    TimelineClusterItem(
+                        itemPosition = latLng,
+                        itemTitle = "Item $index",
+                        itemSnippet = "Snippet $index",
+                        itemZIndex = 0f,
+                    )
+                }
             } ?: Timber.e("Failed to open input stream for URI: $fileUri")
+
+            return emptyList()
         }
     }
 
@@ -162,15 +192,73 @@ fun FileSelectionScreen(
                 Text("Selected file: ${it.path}")
             }
 
-            val singapore = LatLng(1.35, 103.87)
-            val cameraPositionState =
-                rememberCameraPositionState {
-                    position = CameraPosition.fromLatLngZoom(singapore, 10f)
-                }
-            GoogleMap(
-                modifier = Modifier.fillMaxSize(),
-                cameraPositionState = cameraPositionState,
-            )
+            GoogleMapClustering(state.items)
         }
     }
+}
+
+
+
+
+@Composable
+fun GoogleMapClustering(items: List<TimelineClusterItem>) {
+    GoogleMap(
+        modifier = Modifier.fillMaxSize(),
+        cameraPositionState = rememberCameraPositionState {
+            position = CameraPosition.fromLatLngZoom(northAmerica, 6f)
+        }
+    ) {
+        DefaultClustering(
+            items = items,
+        )
+
+        MarkerInfoWindow(
+            state = rememberMarkerState(position = northAmerica),
+            onClick = {
+                Timber.d( "Non-cluster marker clicked! $it")
+                true
+            }
+        )
+    }
+}
+
+@OptIn(MapsComposeExperimentalApi::class)
+@Composable
+private fun DefaultClustering(items: List<TimelineClusterItem>) {
+    Clustering(
+        items = items,
+        // Optional: Handle clicks on clusters, cluster items, and cluster item info windows
+        onClusterClick = {
+            Timber.d( "Cluster clicked! $it")
+            false
+        },
+        onClusterItemClick = {
+            Timber.d( "Cluster item clicked! $it")
+            false
+        },
+        onClusterItemInfoWindowClick = {
+            Timber.d( "Cluster item info window clicked! $it")
+        },
+        // Optional: Custom rendering for non-clustered items
+        clusterItemContent = null
+    )
+}
+
+data class TimelineClusterItem(
+    val itemPosition: LatLng,
+    val itemTitle: String,
+    val itemSnippet: String,
+    val itemZIndex: Float,
+) : ClusterItem {
+    override fun getPosition(): LatLng =
+        itemPosition
+
+    override fun getTitle(): String =
+        itemTitle
+
+    override fun getSnippet(): String =
+        itemSnippet
+
+    override fun getZIndex(): Float =
+        itemZIndex
 }
