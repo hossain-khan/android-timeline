@@ -229,8 +229,8 @@ fun GoogleMapClustering(items: List<TimelineClusterItem>) {
             },
         )
 
-        // This code belongs inside the GoogleMap content block,
-        MapEffect(key1 = true) {map ->
+        // This code belongs inside the GoogleMap content block
+        MapEffect(key1 = items) {map ->
             val latLngs: List<LatLng> = items.map { it.itemPosition }
 
             if(latLngs.isEmpty()) {
@@ -243,7 +243,7 @@ fun GoogleMapClustering(items: List<TimelineClusterItem>) {
                 .build()
 
             // Add a tile overlay to the map, using the heat map tile provider.
-            val overlay: TileOverlay? = map.addTileOverlay(TileOverlayOptions().tileProvider(provider))
+            map.addTileOverlay(TileOverlayOptions().tileProvider(provider))
         }
     }
 }
