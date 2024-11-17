@@ -30,13 +30,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.TileOverlay
+import com.google.android.gms.maps.model.TileOverlayOptions
 import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapEffect
 import com.google.maps.android.compose.MapsComposeExperimentalApi
 import com.google.maps.android.compose.MarkerInfoWindow
 import com.google.maps.android.compose.clustering.Clustering
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+import com.google.maps.android.data.kml.KmlLayer
+import com.google.maps.android.heatmaps.HeatmapTileProvider
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
@@ -202,6 +207,7 @@ fun FileSelectionScreen(
     }
 }
 
+@OptIn(MapsComposeExperimentalApi::class)
 @Composable
 fun GoogleMapClustering(items: List<TimelineClusterItem>) {
     GoogleMap(
@@ -222,6 +228,23 @@ fun GoogleMapClustering(items: List<TimelineClusterItem>) {
                 true
             },
         )
+
+        // This code belongs inside the GoogleMap content block,
+        MapEffect(key1 = true) {map ->
+            val latLngs: List<LatLng> = items.map { it.itemPosition }
+
+            if(latLngs.isEmpty()) {
+                return@MapEffect
+            }
+
+            // Create a heat map tile provider, passing it the latlngs of the police stations.
+            val provider = HeatmapTileProvider.Builder()
+                .data(latLngs)
+                .build()
+
+            // Add a tile overlay to the map, using the heat map tile provider.
+            val overlay: TileOverlay? = map.addTileOverlay(TileOverlayOptions().tileProvider(provider))
+        }
     }
 }
 
@@ -261,3 +284,5 @@ data class TimelineClusterItem(
 
     override fun getZIndex(): Float = itemZIndex
 }
+
+
