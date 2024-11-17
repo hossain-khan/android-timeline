@@ -118,15 +118,18 @@ class TimelineDataPresenter
                         Toast.LENGTH_SHORT,
                     ).show()
 
-                val latLngList: List<LatLng> = timelineData.rawSignals.mapNotNull {
-                    it.position?.latLng?.let { latLngString ->
-                        val latLng = latLngString.split(", ")
-                        LatLng(
-                            /* latitude = */ latLng[0].removeSuffix("°").toDouble(),
-                            /* longitude = */ latLng[1].removeSuffix("°").toDouble()
-                        )
+                val latLngList: List<LatLng> =
+                    timelineData.rawSignals.mapNotNull {
+                        it.position?.latLng?.let { latLngString ->
+                            val latLng = latLngString.split(", ")
+                            LatLng(
+                                // latitude =
+                                latLng[0].removeSuffix("°").toDouble(),
+                                // longitude =
+                                latLng[1].removeSuffix("°").toDouble(),
+                            )
+                        }
                     }
-                }
 
                 return latLngList.mapIndexed { index, latLng ->
                     TimelineClusterItem(
@@ -199,16 +202,14 @@ fun FileSelectionScreen(
     }
 }
 
-
-
-
 @Composable
 fun GoogleMapClustering(items: List<TimelineClusterItem>) {
     GoogleMap(
         modifier = Modifier.fillMaxSize(),
-        cameraPositionState = rememberCameraPositionState {
-            position = CameraPosition.fromLatLngZoom(northAmerica, 6f)
-        }
+        cameraPositionState =
+            rememberCameraPositionState {
+                position = CameraPosition.fromLatLngZoom(northAmerica, 6f)
+            },
     ) {
         DefaultClustering(
             items = items,
@@ -217,9 +218,9 @@ fun GoogleMapClustering(items: List<TimelineClusterItem>) {
         MarkerInfoWindow(
             state = rememberMarkerState(position = northAmerica),
             onClick = {
-                Timber.d( "Non-cluster marker clicked! $it")
+                Timber.d("Non-cluster marker clicked! $it")
                 true
-            }
+            },
         )
     }
 }
@@ -231,18 +232,18 @@ private fun DefaultClustering(items: List<TimelineClusterItem>) {
         items = items,
         // Optional: Handle clicks on clusters, cluster items, and cluster item info windows
         onClusterClick = {
-            Timber.d( "Cluster clicked! $it")
+            Timber.d("Cluster clicked! $it")
             false
         },
         onClusterItemClick = {
-            Timber.d( "Cluster item clicked! $it")
+            Timber.d("Cluster item clicked! $it")
             false
         },
         onClusterItemInfoWindowClick = {
-            Timber.d( "Cluster item info window clicked! $it")
+            Timber.d("Cluster item info window clicked! $it")
         },
         // Optional: Custom rendering for non-clustered items
-        clusterItemContent = null
+        clusterItemContent = null,
     )
 }
 
@@ -252,15 +253,11 @@ data class TimelineClusterItem(
     val itemSnippet: String,
     val itemZIndex: Float,
 ) : ClusterItem {
-    override fun getPosition(): LatLng =
-        itemPosition
+    override fun getPosition(): LatLng = itemPosition
 
-    override fun getTitle(): String =
-        itemTitle
+    override fun getTitle(): String = itemTitle
 
-    override fun getSnippet(): String =
-        itemSnippet
+    override fun getSnippet(): String = itemSnippet
 
-    override fun getZIndex(): Float =
-        itemZIndex
+    override fun getZIndex(): Float = itemZIndex
 }
