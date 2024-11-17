@@ -87,6 +87,7 @@ class TimelineDataPresenter
                         scope.launch {
                             val data = loadFileData(context, event.fileUri)
                             Timber.i("Loaded data: %s", data.size)
+                            items.value = data
                         }
                     }
                 }
