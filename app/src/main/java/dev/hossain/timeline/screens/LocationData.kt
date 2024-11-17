@@ -85,7 +85,8 @@ class TimelineDataPresenter
                     is TimelineDataScreen.Event.FileSelected -> {
                         Timber.i("User selected file: %s", event.fileUri)
                         scope.launch {
-                            //items = loadFileData(context, event.fileUri)
+                            val data = loadFileData(context, event.fileUri)
+                            Timber.i("Loaded data: %s", data.size)
                         }
                     }
                 }
