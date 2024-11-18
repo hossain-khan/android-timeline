@@ -229,9 +229,10 @@ fun GoogleMapClustering(items: List<TimelineClusterItem>) {
             }
         },
     ) {
-//        DefaultClustering(
-//            items = items,
-//        )
+        // Clustering data is useful for debugging the points on the map.
+        DefaultClustering(
+            items = items,
+        )
 
         MarkerInfoWindow(
             state = rememberMarkerState(position = northAmerica),
