@@ -118,18 +118,10 @@ class TimelineDataPresenter
                     "Parsed timeline data. Raw signals: ${timelineData.rawSignals.size}, Semantic Segments: ${timelineData.semanticSegments.size}",
                 )
 
-                /*val latLngList: List<LatLng> =
+                val latLngSignalList: List<LatLng> =
                     timelineData.rawSignals.mapNotNull {
-                        it.position?.latLng?.let { latLngString ->
-                            val latLng = latLngString.split(", ")
-                            LatLng(
-                                // latitude =
-                                latLng[0].removeSuffix("°").toDouble(),
-                                // longitude =
-                                latLng[1].removeSuffix("°").toDouble(),
-                            )
-                        }
-                    }*/
+                        it.position?.latLng?.toLatLng()
+                    }
 
                 val latLngVisitList: List<LatLng> =
                     timelineData.semanticSegments.mapNotNull {
@@ -147,14 +139,16 @@ class TimelineDataPresenter
                             it.timelinePath.map { timelinePoint -> timelinePoint.point.toLatLng() }
                         }.flatten()
 
-                return latLngVisitList.plus(latLngPathList).mapIndexed { index, latLng ->
-                    TimelineClusterItem(
-                        itemPosition = latLng,
-                        itemTitle = "Item $index",
-                        itemSnippet = "Snippet $index",
-                        itemZIndex = 0f,
-                    )
-                }
+                return listOf(latLngVisitList, latLngPathList, latLngSignalList)
+                    .flatten()
+                    .mapIndexed { index, latLng ->
+                        TimelineClusterItem(
+                            itemPosition = latLng,
+                            itemTitle = "Item $index",
+                            itemSnippet = "Snippet $index",
+                            itemZIndex = 0f,
+                        )
+                    }
             } ?: Timber.e("Failed to open input stream for URI: $fileUri")
 
             return emptyList()
