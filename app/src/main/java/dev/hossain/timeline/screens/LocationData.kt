@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -51,6 +50,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dev.hossain.timeline.Parser
 import dev.hossain.timeline.di.AppScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import timber.log.Timber
@@ -87,7 +87,7 @@ class TimelineDataPresenter
                 when (event) {
                     is TimelineDataScreen.Event.FileSelected -> {
                         Timber.i("User selected file: %s", event.fileUri)
-                        scope.launch {
+                        scope.launch(Dispatchers.IO) {
                             val data = loadFileData(context, event.fileUri)
                             Timber.i("Loaded data: %s", data.size)
                             items.value = data
@@ -113,18 +113,28 @@ class TimelineDataPresenter
 
             contentResolver.openInputStream(fileUri)?.use { inputStream: InputStream ->
                 val timelineData = parser.parse(inputStream)
-                Timber.d("Parsed timeline data: $timelineData")
-                Toast
-                    .makeText(
-                        context,
-                        "Parsed timeline data successfully. Got ${timelineData.rawSignals.size} raw signals and ${timelineData.semanticSegments} semantic segments.",
-                        Toast.LENGTH_SHORT,
-                    ).show()
+                Timber.d(
+                    "Parsed timeline data. Raw signals: ${timelineData.rawSignals.size}, Semantic Segments: ${timelineData.semanticSegments.size}",
+                )
 
-                val latLngList: List<LatLng> =
+                /*val latLngList: List<LatLng> =
                     timelineData.rawSignals.mapNotNull {
                         it.position?.latLng?.let { latLngString ->
                             val latLng = latLngString.split(", ")
+                            LatLng(
+                                // latitude =
+                                latLng[0].removeSuffix("°").toDouble(),
+                                // longitude =
+                                latLng[1].removeSuffix("°").toDouble(),
+                            )
+                        }
+                    }*/
+
+                val latLngList: List<LatLng> =
+                    timelineData.semanticSegments.mapNotNull {
+                        // Only pick the visit location
+                        it.visit?.topCandidate?.placeLocation?.let { placeLocation ->
+                            val latLng = placeLocation.latLng.split(", ")
                             LatLng(
                                 // latitude =
                                 latLng[0].removeSuffix("°").toDouble(),
@@ -215,9 +225,9 @@ fun GoogleMapClustering(items: List<TimelineClusterItem>) {
                 position = CameraPosition.fromLatLngZoom(northAmerica, 6f)
             },
     ) {
-        DefaultClustering(
-            items = items,
-        )
+//        DefaultClustering(
+//            items = items,
+//        )
 
         MarkerInfoWindow(
             state = rememberMarkerState(position = northAmerica),
