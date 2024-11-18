@@ -118,41 +118,37 @@ class TimelineDataPresenter
                     "Parsed timeline data. Raw signals: ${timelineData.rawSignals.size}, Semantic Segments: ${timelineData.semanticSegments.size}",
                 )
 
-                /*val latLngList: List<LatLng> =
+                val latLngSignalList: List<LatLng> =
                     timelineData.rawSignals.mapNotNull {
-                        it.position?.latLng?.let { latLngString ->
-                            val latLng = latLngString.split(", ")
-                            LatLng(
-                                // latitude =
-                                latLng[0].removeSuffix("°").toDouble(),
-                                // longitude =
-                                latLng[1].removeSuffix("°").toDouble(),
-                            )
-                        }
-                    }*/
-
-                val latLngList: List<LatLng> =
-                    timelineData.semanticSegments.mapNotNull {
-                        // Only pick the visit location
-                        it.visit?.topCandidate?.placeLocation?.let { placeLocation ->
-                            val latLng = placeLocation.latLng.split(", ")
-                            LatLng(
-                                // latitude =
-                                latLng[0].removeSuffix("°").toDouble(),
-                                // longitude =
-                                latLng[1].removeSuffix("°").toDouble(),
-                            )
-                        }
+                        it.position?.latLng?.toLatLng()
                     }
 
-                return latLngList.mapIndexed { index, latLng ->
-                    TimelineClusterItem(
-                        itemPosition = latLng,
-                        itemTitle = "Item $index",
-                        itemSnippet = "Snippet $index",
-                        itemZIndex = 0f,
-                    )
-                }
+                val latLngVisitList: List<LatLng> =
+                    timelineData.semanticSegments.mapNotNull {
+                        // Only pick the visit location
+                        it.visit
+                            ?.topCandidate
+                            ?.placeLocation
+                            ?.latLng
+                            ?.toLatLng()
+                    }
+
+                val latLngPathList: List<LatLng> =
+                    timelineData.semanticSegments
+                        .map {
+                            it.timelinePath.map { timelinePoint -> timelinePoint.point.toLatLng() }
+                        }.flatten()
+
+                return listOf(latLngVisitList, latLngPathList, latLngSignalList)
+                    .flatten()
+                    .mapIndexed { index, latLng ->
+                        TimelineClusterItem(
+                            itemPosition = latLng,
+                            itemTitle = "Item $index",
+                            itemSnippet = "Snippet $index",
+                            itemZIndex = 0f,
+                        )
+                    }
             } ?: Timber.e("Failed to open input stream for URI: $fileUri")
 
             return emptyList()
@@ -233,9 +229,10 @@ fun GoogleMapClustering(items: List<TimelineClusterItem>) {
             }
         },
     ) {
-//        DefaultClustering(
-//            items = items,
-//        )
+        // Clustering data is useful for debugging the points on the map.
+        DefaultClustering(
+            items = items,
+        )
 
         MarkerInfoWindow(
             state = rememberMarkerState(position = northAmerica),
@@ -301,4 +298,12 @@ data class TimelineClusterItem(
     override fun getSnippet(): String = itemSnippet
 
     override fun getZIndex(): Float = itemZIndex
+}
+
+private fun String.toLatLng(): LatLng {
+    val latLng = this.split(", ")
+    return LatLng(
+        latLng[0].removeSuffix("°").toDouble(),
+        latLng[1].removeSuffix("°").toDouble(),
+    )
 }
