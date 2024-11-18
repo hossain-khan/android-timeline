@@ -131,21 +131,23 @@ class TimelineDataPresenter
                         }
                     }*/
 
-                val latLngList: List<LatLng> =
+                val latLngVisitList: List<LatLng> =
                     timelineData.semanticSegments.mapNotNull {
                         // Only pick the visit location
-                        it.visit?.topCandidate?.placeLocation?.let { placeLocation ->
-                            val latLng = placeLocation.latLng.split(", ")
-                            LatLng(
-                                // latitude =
-                                latLng[0].removeSuffix("°").toDouble(),
-                                // longitude =
-                                latLng[1].removeSuffix("°").toDouble(),
-                            )
-                        }
+                        it.visit
+                            ?.topCandidate
+                            ?.placeLocation
+                            ?.latLng
+                            ?.toLatLng()
                     }
 
-                return latLngList.mapIndexed { index, latLng ->
+                val latLngPathList: List<LatLng> =
+                    timelineData.semanticSegments
+                        .map {
+                            it.timelinePath.map { timelinePoint -> timelinePoint.point.toLatLng() }
+                        }.flatten()
+
+                return latLngVisitList.plus(latLngPathList).mapIndexed { index, latLng ->
                     TimelineClusterItem(
                         itemPosition = latLng,
                         itemTitle = "Item $index",
@@ -301,4 +303,12 @@ data class TimelineClusterItem(
     override fun getSnippet(): String = itemSnippet
 
     override fun getZIndex(): Float = itemZIndex
+}
+
+private fun String.toLatLng(): LatLng {
+    val latLng = this.split(", ")
+    return LatLng(
+        latLng[0].removeSuffix("°").toDouble(),
+        latLng[1].removeSuffix("°").toDouble(),
+    )
 }
