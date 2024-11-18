@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.TileOverlayOptions
@@ -224,6 +225,13 @@ fun GoogleMapClustering(items: List<TimelineClusterItem>) {
             rememberCameraPositionState {
                 position = CameraPosition.fromLatLngZoom(northAmerica, 6f)
             },
+        googleMapOptionsFactory = {
+            GoogleMapOptions().apply {
+                mapId("c9fea86305b2b256")
+                compassEnabled(true)
+                zoomControlsEnabled(false)
+            }
+        },
     ) {
 //        DefaultClustering(
 //            items = items,
