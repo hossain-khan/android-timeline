@@ -39,7 +39,7 @@ moshi = "1.15.1"
 
 # https://developers.google.com/maps/documentation/android-sdk/maps-compose
 # https://github.com/googlemaps/android-maps-compose
-googleMapsCompose = "6.2.1"
+googleMapsCompose = "6.4.0"
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 [libraries]
