@@ -21,7 +21,7 @@ anvil = "0.4.0"
 dagger = "2.54"
 
 # https://github.com/jeremymailen/kotlinter-gradle
-kotlinter = "4.5.0"
+kotlinter = "5.0.1"
 
 # https://developer.android.com/develop/ui/compose/text/fonts
 googleFonts = "1.7.6"
