@@ -33,7 +33,7 @@ splash = "1.0.1"
 timber = "5.0.1"
 
 # https://github.com/square/okio
-okio = "3.9.1"
+okio = "3.10.2"
 
 moshi = "1.15.2"
 
