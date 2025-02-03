@@ -24,7 +24,7 @@ dagger = "2.55"
 kotlinter = "5.0.1"
 
 # https://developer.android.com/develop/ui/compose/text/fonts
-googleFonts = "1.7.6"
+googleFonts = "1.7.7"
 
 # https://developer.android.com/develop/ui/views/launch/splash-screen
 splash = "1.0.1"
