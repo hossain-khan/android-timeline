@@ -11,14 +11,14 @@ plugins {
 
 android {
     namespace = "dev.hossain.timeline"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "dev.hossain.timeline"
         // Android 11 (API level 30) https://developer.android.com/tools/releases/platforms#11
         minSdk = 30
         // Android 15 (API level 35) https://developer.android.com/tools/releases/platforms#15
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
