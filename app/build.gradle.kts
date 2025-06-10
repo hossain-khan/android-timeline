@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.ksp)
@@ -12,14 +11,14 @@ plugins {
 
 android {
     namespace = "dev.hossain.timeline"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "dev.hossain.timeline"
         // Android 11 (API level 30) https://developer.android.com/tools/releases/platforms#11
         minSdk = 30
         // Android 15 (API level 35) https://developer.android.com/tools/releases/platforms#15
-        targetSdk = 35
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -48,6 +47,10 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+    }
+    
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.4"
     }
 }
 
